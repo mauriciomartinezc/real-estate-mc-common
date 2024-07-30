@@ -1,0 +1,44 @@
+[
+  {
+    "id": "2119a4a2-3883-4559-bfe8-eb4982a412ec",
+    "name": "Colombia",
+    "iso3": "COL",
+    "iso2": "CO",
+    "numeric_code": "170",
+    "capital": "Bogotá",
+    "tld": ".co",
+    "native": "Colombia",
+    "region": "Americas",
+    "nationality": "Colombian",
+    "timezones": [
+      {
+        "tzName": "Colombia Time",
+        "zoneName": "America/Bogota",
+        "gmtOffset": -18000,
+        "abbreviation": "COT",
+        "gmtOffsetName": "UTC-05:00"
+      }
+    ],
+    "translations": {
+      "kr": "콜롬비아",
+      "pt-BR": "Colômbia",
+      "pt": "Colômbia",
+      "nl": "Colombia",
+      "hr": "Kolumbija",
+      "fa": "کلمبیا",
+      "de": "Kolumbien",
+      "es": "Colombia",
+      "fr": "Colombie",
+      "ja": "コロンビア",
+      "it": "Colombia",
+      "cn": "哥伦比亚",
+      "tr": "Kolombiya"
+    },
+    "latitude": "4.00000000",
+    "longitude": "-72.00000000",
+    "emoji": "co",
+    "emoji_u": "U+1F1E8 U+1F1F4",
+    "currency_id": "b2c9ece8-8926-47d4-ad39-ed00691bae2c",
+    "active": true
+  }
+]
