@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mauriciomartinezc/real-estate-mc-common/config"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
+	"github.com/mauriciomartinezc/real-estate-mc-common/middleware"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/cities"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/countries"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/currencies"
@@ -51,7 +52,7 @@ func main() {
 
 	e := echo.New()
 
-	//e.Use(middleware.LanguageHandler())
+	e.Use(middleware.LanguageHandler())
 
 	//api := e.Group("/api")
 
