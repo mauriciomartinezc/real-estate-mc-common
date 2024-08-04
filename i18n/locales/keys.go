@@ -1,6 +1,8 @@
 package locales
 
 const (
-	SuccessCreated = "SuccessCreated"
-	ErrorPayload   = "ErrorPayload"
+	SuccessCreated  = "SuccessCreated"
+	ErrorPayload    = "ErrorPayload"
+	InternalError   = "InternalError"
+	SuccessResponse = "SuccessResponse"
 )

@@ -4,11 +4,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mauriciomartinezc/real-estate-mc-common/config"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
+	"github.com/mauriciomartinezc/real-estate-mc-common/handler"
 	"github.com/mauriciomartinezc/real-estate-mc-common/middleware"
+	"github.com/mauriciomartinezc/real-estate-mc-common/repository"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/cities"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/countries"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/currencies"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/states"
+	"github.com/mauriciomartinezc/real-estate-mc-common/service"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -50,11 +53,23 @@ func main() {
 	states.CreateStateSeeds(db)
 	cities.CreateCitySeeds(db)
 
+	countryRepo := repository.NewCountryRepository(db)
+	stateRepo := repository.NewStateRepository(db)
+	cityRepo := repository.NewCityRepository(db)
+
+	countryService := service.NewCountryService(countryRepo)
+	stateService := service.NewStateService(stateRepo)
+	cityService := service.NewCityService(cityRepo)
+
 	e := echo.New()
 
 	e.Use(middleware.LanguageHandler())
 
-	//api := e.Group("/api")
+	api := e.Group("/api")
+
+	handler.NewCountryHandler(api, countryService)
+	handler.NewStateHandler(api, stateService)
+	handler.NewCityHandler(api, cityService)
 
 	// swagger documentation
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

@@ -31,5 +31,11 @@
   },
   "ProfileSuccess": {
     "other": "User profile successfully"
+  },
+  "InternalError": {
+    "other": "Internal error"
+  },
+  "SuccessResponse": {
+    "other": "Success response"
   }
 }

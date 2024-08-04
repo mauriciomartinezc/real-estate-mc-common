@@ -2,20 +2,14 @@ package domain
 
 import (
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type Currency struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Name      string    `json:"name" gorm:"not null"`
-	Code      string    `json:"code" gorm:"not null"`
-	Symbol    string    `json:"symbol" gorm:"not null"`
-	Countries Countries `gorm:"references:ID"`
+	ID        uuid.UUID `json:"id,omitempty" gorm:"type:uuid;primaryKey"`
+	Name      string    `json:"name,omitempty" gorm:"not null"`
+	Code      string    `json:"code,omitempty" gorm:"not null"`
+	Symbol    string    `json:"symbol,omitempty" gorm:"not null"`
+	Countries Countries `json:"countries,omitempty" gorm:"references:ID"`
 }
 
 type Currencies []Currency
-
-func (c *Currency) BeforeCreate(ctx *gorm.DB) (err error) {
-	c.ID = uuid.New()
-	return
-}
