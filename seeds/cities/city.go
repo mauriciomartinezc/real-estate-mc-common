@@ -25,7 +25,7 @@ func CreateCitySeeds(db *gorm.DB) {
 
 		for _, city := range cities {
 			if err := db.Create(&city).Error; err != nil {
-				log.Printf("failed to create city %s: %v", city.Name, err)
+				log.Printf("failed to create service_test %s: %v", city.Name, err)
 			}
 		}
 	}
