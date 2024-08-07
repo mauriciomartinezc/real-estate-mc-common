@@ -26,6 +26,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	err = config.ValidateEnvironments()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	dsn := config.GetDSN()
 
 	newLogger := logger.New(

@@ -18,6 +18,9 @@ func NewCityHandler(e *echo.Group, cityService service.CityService) {
 
 func (h *CityHandler) GetStateCities(c echo.Context) error {
 	stateUuid := c.Param("stateUuid")
+	if !utils.IsValidUUID(stateUuid) {
+		return utils.SendBadRequest(c, locales.InvalidUuid)
+	}
 	cities, err := h.cityService.GetStateCities(stateUuid)
 	if err != nil {
 		return utils.SendInternalServerError(c, err.Error())

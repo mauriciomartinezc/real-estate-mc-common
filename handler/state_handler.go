@@ -18,6 +18,9 @@ func NewStateHandler(e *echo.Group, stateService service.StateService) {
 
 func (h *StateHandler) GetCountryStates(c echo.Context) error {
 	countryUuid := c.Param("countryUuid")
+	if !utils.IsValidUUID(countryUuid) {
+		return utils.SendBadRequest(c, locales.InvalidUuid)
+	}
 	states, err := h.stateService.GetCountryStates(countryUuid)
 	if err != nil {
 		return utils.SendInternalServerError(c, err.Error())

@@ -5,4 +5,5 @@ const (
 	ErrorPayload    = "ErrorPayload"
 	InternalError   = "InternalError"
 	SuccessResponse = "SuccessResponse"
+	InvalidUuid     = "InvalidUuid"
 )
