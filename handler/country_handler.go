@@ -16,6 +16,16 @@ func NewCountryHandler(e *echo.Group, countryService service.CountryService) {
 	e.GET("/countries", handler.Countries)
 }
 
+// Countries godoc
+// @Summary Get countries
+// @Description Get all countries
+// @Tags countries
+// @Accept json
+// @Produce json
+// @Success 200 {object} utils.SuccessResponse
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 404 {object} utils.ErrorResponse
+// @Router /countries [get]
 func (h *CountryHandler) Countries(c echo.Context) error {
 	countries, err := h.countryService.Countries()
 	if err != nil {

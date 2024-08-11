@@ -16,6 +16,17 @@ func NewStateHandler(e *echo.Group, stateService service.StateService) {
 	e.GET("/states/:countryUuid", handler.GetCountryStates)
 }
 
+// GetCountryStates godoc
+// @Summary Get states by country
+// @Description Get all states for a specific country
+// @Tags states
+// @Accept json
+// @Produce json
+// @Param countryUuid path string true "Country UUID"
+// @Success 200 {object} utils.SuccessResponse
+// @Failure 400 {object} utils.ErrorResponse
+// @Failure 404 {object} utils.ErrorResponse
+// @Router /states/{countryUuid} [get]
 func (h *StateHandler) GetCountryStates(c echo.Context) error {
 	countryUuid := c.Param("countryUuid")
 	if !utils.IsValidUUID(countryUuid) {

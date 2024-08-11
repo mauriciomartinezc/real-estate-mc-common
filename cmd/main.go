@@ -82,5 +82,5 @@ func run() error {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	return e.Start(":8080")
+	return e.Start(":" + os.Getenv("SERVER_PORT"))
 }
