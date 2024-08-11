@@ -2,12 +2,11 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 )
 
-func GetDSN() string {
+func GetDSN() (string, error) {
 	user := os.Getenv("DB_USER")
 	pass := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
@@ -15,12 +14,14 @@ func GetDSN() string {
 	dbName := os.Getenv("DB_NAME")
 	sslMode := os.Getenv("DB_SSL_MODE")
 	sslCert := os.Getenv("DB_SSL_CERT")
+
 	cwd, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Error getting current working directory: %v", err)
+		return "", fmt.Errorf("error getting current working directory: %w", err)
 	}
 	sslCert = filepath.Join(cwd, sslCert)
-	return fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=%s sslrootcert=%s",
+
+	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=%s sslrootcert=%s",
 		user,
 		pass,
 		host,
@@ -29,4 +30,6 @@ func GetDSN() string {
 		sslMode,
 		sslCert,
 	)
+
+	return dsn, nil
 }

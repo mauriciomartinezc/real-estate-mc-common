@@ -1,11 +1,14 @@
 package service
 
 import (
+	"errors"
+	"github.com/mauriciomartinezc/real-estate-mc-common/i18n/locales"
+	"testing"
+
 	"github.com/google/uuid"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
 )
 
 type MockStateRepository struct {
@@ -21,15 +24,43 @@ func TestGetCountryStates(t *testing.T) {
 	mockRepo := new(MockStateRepository)
 	stateService := NewStateService(mockRepo)
 
-	stateUuid := uuid.New().String()
-	expectedStates := &domain.States{}
+	t.Run("Valid UUID", func(t *testing.T) {
+		countryUuid := uuid.New().String()
+		expectedStates := &domain.States{}
 
-	mockRepo.On("GetCountryStates", stateUuid).Return(expectedStates, nil)
+		mockRepo.On("GetCountryStates", countryUuid).Return(expectedStates, nil)
 
-	states, err := stateService.GetCountryStates(stateUuid)
+		states, err := stateService.GetCountryStates(countryUuid)
 
-	assert.NoError(t, err)
-	assert.Equal(t, expectedStates, states)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedStates, states)
 
-	mockRepo.AssertExpectations(t)
+		mockRepo.AssertExpectations(t)
+	})
+
+	t.Run("Invalid UUID", func(t *testing.T) {
+		invalidUuid := "invalid-uuid"
+
+		states, err := stateService.GetCountryStates(invalidUuid)
+
+		assert.Error(t, err)
+		assert.Nil(t, states)
+		assert.EqualError(t, err, locales.InvalidUuid)
+	})
+
+	t.Run("Repository Error", func(t *testing.T) {
+		countryUuid := uuid.New().String()
+		expectedStates := &domain.States{}
+		expectedError := errors.New("repository error")
+
+		mockRepo.On("GetCountryStates", countryUuid).Return(expectedStates, expectedError)
+
+		states, err := stateService.GetCountryStates(countryUuid)
+
+		assert.Error(t, err)
+		assert.Nil(t, states)
+		assert.EqualError(t, err, expectedError.Error())
+
+		mockRepo.AssertExpectations(t)
+	})
 }

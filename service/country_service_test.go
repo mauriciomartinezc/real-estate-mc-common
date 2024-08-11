@@ -2,10 +2,11 @@ package service
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
 )
 
 // Mock del repositorio
@@ -41,13 +42,13 @@ func TestCountryService_GetCountries_Error(t *testing.T) {
 	mockRepo := new(MockCountryRepository)
 	countryService := NewCountryService(mockRepo)
 
-	var nilCountries *domain.Countries
-	mockRepo.On("GetAll").Return(nilCountries, errors.New("database error"))
+	mockRepo.On("GetAll").Return(nil, errors.New("database error"))
 
 	countries, err := countryService.Countries()
 
 	assert.Error(t, err)
 	assert.Nil(t, countries)
+	assert.EqualError(t, err, "database error")
 
 	mockRepo.AssertExpectations(t)
 }

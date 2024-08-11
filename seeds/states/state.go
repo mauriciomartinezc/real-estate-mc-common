@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
 	"gorm.io/gorm"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -17,37 +16,31 @@ func CreateStateSeeds(db *gorm.DB) {
 	db.Model(&domain.State{}).Count(&count)
 	if count == 0 {
 		var states domain.States
-		data := getAllEstatesJson()
-
-		if err := json.Unmarshal(data, &states); err != nil {
-			log.Fatalf("failed to unmarshal JSON: %v", err)
+		data, err := getAllStatesJson()
+		if err != nil {
+			log.Printf("failed to get states JSON: %v", err)
+			return
 		}
 
-		for _, estate := range states {
-			if err := db.Create(&estate).Error; err != nil {
-				log.Printf("failed to create estate %s: %v", estate.Name, err)
+		if err := json.Unmarshal(data, &states); err != nil {
+			log.Printf("failed to unmarshal JSON: %v", err)
+			return
+		}
+
+		for _, state := range states {
+			if err := db.Create(&state).Error; err != nil {
+				log.Printf("failed to create state %s: %v", state.Name, err)
 			}
 		}
 	}
-	fmt.Println("CreateStateSeeds completed success.")
+	fmt.Println("CreateStateSeeds completed successfully.")
 }
 
-func getAllEstatesJson() []byte {
+func getAllStatesJson() ([]byte, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Error getting current working directory: %v", err)
+		return nil, fmt.Errorf("error getting current working directory: %w", err)
 	}
 	pathFile := filepath.Join(cwd, "../seeds/states/data.json")
-	file, err := os.Open(pathFile)
-	if err != nil {
-		log.Fatalf("failed to open JSON file: %v", err)
-	}
-	defer file.Close()
-
-	byteValue, err := ioutil.ReadAll(file)
-	if err != nil {
-		log.Fatalf("failed to read JSON file: %v", err)
-	}
-
-	return byteValue
+	return os.ReadFile(pathFile)
 }

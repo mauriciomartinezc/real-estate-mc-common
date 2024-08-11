@@ -1,7 +1,7 @@
 package config
 
 import (
-	"errors"
+	"fmt"
 	"github.com/joho/godotenv"
 	"os"
 	"path/filepath"
@@ -11,55 +11,36 @@ import (
 func LoadEnv() error {
 	cwd, err := os.Getwd()
 	if err != nil {
-		return errors.New("error getting current working directory LoadEnv()")
+		return fmt.Errorf("error getting current working directory: %w", err)
 	}
 	envPath := filepath.Join(cwd, "/cmd/.env")
 	err = godotenv.Load(envPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("error loading .env file: %w", err)
 	}
 
 	return nil
 }
 
 func ValidateEnvironments() error {
-	// Server
-	if getEnvironment("SERVER_PORT") == "" {
-		return getErrorSetEnvironment("SERVER_PORT")
+	requiredEnvs := []string{
+		"SERVER_PORT",
+		"ALLOWED_ORIGINS",
+		"ALLOWED_METHODS",
+		"JWT_SECRET_KEY",
+		"DB_HOST",
+		"DB_PORT",
+		"DB_USER",
+		"DB_PASSWORD",
+		"DB_NAME",
+		"DB_SSL_MODE",
+		"DB_SSL_CERT",
 	}
-	if getEnvironment("ALLOWED_ORIGINS") == "" {
-		return getErrorSetEnvironment("ALLOWED_ORIGINS")
-	}
-	if getEnvironment("SERVER_PORT") == "" {
-		return getErrorSetEnvironment("SERVER_PORT")
-	}
-	if getEnvironment("ALLOWED_METHODS") == "" {
-		return getErrorSetEnvironment("ALLOWED_METHODS")
-	}
-	if getEnvironment("JWT_SECRET_KEY") == "" {
-		return getErrorSetEnvironment("JWT_SECRET_KEY")
-	}
-	// Database
-	if getEnvironment("DB_HOST") == "" {
-		return getErrorSetEnvironment("DB_HOST")
-	}
-	if getEnvironment("DB_PORT") == "" {
-		return getErrorSetEnvironment("DB_PORT")
-	}
-	if getEnvironment("DB_USER") == "" {
-		return getErrorSetEnvironment("DB_USER")
-	}
-	if getEnvironment("DB_PASSWORD") == "" {
-		return getErrorSetEnvironment("DB_PASSWORD")
-	}
-	if getEnvironment("DB_NAME") == "" {
-		return getErrorSetEnvironment("DB_NAME")
-	}
-	if getEnvironment("DB_SSL_MODE") == "" {
-		return getErrorSetEnvironment("DB_SSL_MODE")
-	}
-	if getEnvironment("DB_SSL_CERT") == "" {
-		return getErrorSetEnvironment("DB_SSL_CERT")
+
+	for _, env := range requiredEnvs {
+		if getEnvironment(env) == "" {
+			return getErrorSetEnvironment(env)
+		}
 	}
 
 	return nil
@@ -70,5 +51,5 @@ func getEnvironment(environmentName string) string {
 }
 
 func getErrorSetEnvironment(environmentName string) error {
-	return errors.New("the environment " + environmentName + " is not set")
+	return fmt.Errorf("the environment variable %s is not set", environmentName)
 }
