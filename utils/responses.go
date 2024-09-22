@@ -47,7 +47,7 @@ func SendErrorValidations(c echo.Context, message string, err error) error {
 	message = localize.MustLocalize(&i18n.LocalizeConfig{MessageID: message})
 	var validationErrors validator.ValidationErrors
 	errors.As(err, &validationErrors)
-	return SendResponse(c, http.StatusUnprocessableEntity, false, message, FormatValidationErrors(validationErrors, localize))
+	return SendResponse(c, http.StatusUnprocessableEntity, false, message, FormatValidationErrors(localize, validationErrors))
 }
 
 func SendInternalServerError(c echo.Context, message string) error {

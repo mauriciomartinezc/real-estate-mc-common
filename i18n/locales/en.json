@@ -42,6 +42,9 @@
     "other": "Invalid uuid"
   },
   "InvalidValueFor": {
-    "other": "Invalid value for"
+    "other": "Invalid value for field"
+  },
+  "required": {
+    "other": "is required"
   }
 }

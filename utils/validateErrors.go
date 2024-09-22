@@ -9,13 +9,13 @@ import (
 )
 
 // FormatValidationErrors returns a map where each field has an array of error messages
-func FormatValidationErrors(validationErrors validator.ValidationErrors, localice *i18n.Localizer) map[string][]string {
+func FormatValidationErrors(localice *i18n.Localizer, validationErrors validator.ValidationErrors) map[string][]string {
 	errors := make(map[string][]string)
 
 	for _, err := range validationErrors {
 		field := err.StructField()
-		message := fmt.Sprintf("%s %s, %s", transString(localice, locales.InvalidValueFor), transString(localice, field), err.Tag())
-		errors[field] = append(errors[parseFieldName(field)], message)
+		message := fmt.Sprintf("%s %s, %s", transString(localice, locales.InvalidValueFor), transString(localice, field), transString(localice, err.Tag()))
+		errors[parseFieldName(field)] = append(errors[parseFieldName(field)], message)
 	}
 
 	return errors
