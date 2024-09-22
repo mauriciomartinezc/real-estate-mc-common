@@ -6,4 +6,5 @@ const (
 	InternalError   = "InternalError"
 	SuccessResponse = "SuccessResponse"
 	InvalidUuid     = "InvalidUuid"
+	InvalidValueFor = "InvalidValueFor"
 )

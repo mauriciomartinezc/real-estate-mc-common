@@ -40,5 +40,8 @@
   },
   "InvalidUuid": {
     "other": "Invalid uuid"
+  },
+  "InvalidValueFor": {
+    "other": "Invalid value for"
   }
 }
