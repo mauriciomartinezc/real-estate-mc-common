@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"errors"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"net/http"
@@ -22,15 +24,6 @@ func SendResponse(c echo.Context, status int, success bool, message string, data
 	})
 }
 
-func SendError(c echo.Context, status int, message string, data interface{}) error {
-	return c.JSON(status, Response{
-		Status:  status,
-		Success: false,
-		Message: message,
-		Data:    data,
-	})
-}
-
 func SendSuccess(c echo.Context, message string, data interface{}) error {
 	localize := c.Get("localize").(*i18n.Localizer)
 	message = localize.MustLocalize(&i18n.LocalizeConfig{MessageID: message})
@@ -46,9 +39,17 @@ func SendCreated(c echo.Context, message string, data interface{}) error {
 func SendBadRequest(c echo.Context, message string) error {
 	localize := c.Get("localize").(*i18n.Localizer)
 	message = localize.MustLocalize(&i18n.LocalizeConfig{MessageID: message})
-	return SendError(c, http.StatusBadRequest, message, nil)
+	return SendResponse(c, http.StatusBadRequest, false, message, nil)
+}
+
+func SendErrorValidations(c echo.Context, message string, err error) error {
+	localize := c.Get("localize").(*i18n.Localizer)
+	message = localize.MustLocalize(&i18n.LocalizeConfig{MessageID: message})
+	var validationErrors validator.ValidationErrors
+	errors.As(err, &validationErrors)
+	return SendResponse(c, http.StatusUnprocessableEntity, false, message, FormatValidationErrors(validationErrors))
 }
 
 func SendInternalServerError(c echo.Context, message string) error {
-	return SendError(c, http.StatusInternalServerError, message, nil)
+	return SendResponse(c, http.StatusInternalServerError, false, message, nil)
 }

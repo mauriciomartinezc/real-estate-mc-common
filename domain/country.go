@@ -23,8 +23,8 @@ type Country struct {
 	Emoji        string          `json:"emoji,omitempty" gorm:"not null"`
 	EmojiU       string          `json:"emojiU,omitempty" gorm:"not null"`
 	Active       bool            `json:"active,omitempty" gorm:"default:false"`
-	CurrencyId   uuid.UUID       `json:"currency_id,omitempty" gorm:"not null"`
-	Currency     Currency        `json:"currency,omitempty" gorm:"foreignKey:CurrencyId"`
+	CurrencyId   *uuid.UUID      `json:"currency_id,omitempty" gorm:"type:uuid;not null"`
+	Currency     Currency        `json:"currency,omitempty" gorm:"foreignKey:CurrencyId;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	States       States          `json:"states,omitempty" gorm:"references:ID"`
 }
 
