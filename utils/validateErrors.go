@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/mauriciomartinezc/real-estate-mc-common/i18n/locales"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"regexp"
 	"strings"
 )
 
@@ -26,8 +27,8 @@ func transString(localice *i18n.Localizer, string string) string {
 }
 
 func parseFieldName(fieldName string) string {
-	if len(fieldName) > 0 {
-		fieldName = strings.ToLower(string(fieldName[0])) + fieldName[1:]
-	}
-	return fieldName
+	regex := regexp.MustCompile("([a-z0-9])([A-Z])")
+	snake := regex.ReplaceAllString(fieldName, "${1}_${2}")
+
+	return strings.ToLower(snake)
 }
