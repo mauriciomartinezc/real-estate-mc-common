@@ -50,3 +50,10 @@ proxy_port = 0
 [screen]
 clear_on_rebuild = false
 keep_scroll = true
+
+[watcher]
+include = ["."]
+exclude = ["vendor", "logs", "tmp"]
+
+[watcher.ignore]
+extensions = ["*.tmp", "*.log"]
