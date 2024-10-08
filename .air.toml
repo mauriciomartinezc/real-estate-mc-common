@@ -4,8 +4,9 @@ tmp_dir = "tmp"
 
 [build]
 args_bin = []
-bin = "./tmp/main.exe"
-cmd = "go build -o ./tmp/main.exe ./cmd/."
+bin = "./tmp/main" # For Linux|MacOS
+#bin = "./tmp/main.exe" # For Windows
+cmd = "go build -o ./tmp/main ./cmd/." # Change main to main.exe for Windows
 delay = 1000
 exclude_dir = ["assets", "tmp", "vendor", "testdata"]
 exclude_file = []
