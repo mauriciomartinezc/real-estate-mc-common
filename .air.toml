@@ -3,9 +3,19 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
+# Config for Linux|macOS
+bin = "./tmp/main"
+cmd = "go build -o ./tmp/main ./cmd/."
+pre_cmd = ["rm -rf ./tmp/main", "chmod -R 755 ./tmp"]
+# End config for Linux|macOS
+
+# Config for Windows
+#bin = "./tmp/main.exe"
+#cmd = "go build -o ./tmp/main.exe ./cmd/."
+#pre_cmd = []
+# End config for Windows
+
 args_bin = []
-bin = "./tmp/main.exe"
-cmd = "go build -o ./tmp/main.exe ./cmd/."
 delay = 1000
 exclude_dir = ["assets", "tmp", "vendor", "testdata"]
 exclude_file = []
@@ -21,7 +31,6 @@ log = "build-errors.log"
 poll = false
 poll_interval = 0
 post_cmd = []
-pre_cmd = []
 rerun = false
 rerun_delay = 500
 send_interrupt = false
