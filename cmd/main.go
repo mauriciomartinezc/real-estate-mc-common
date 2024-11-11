@@ -5,14 +5,12 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mauriciomartinezc/real-estate-mc-common/config"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
-	"github.com/mauriciomartinezc/real-estate-mc-common/handlers"
 	"github.com/mauriciomartinezc/real-estate-mc-common/middlewares"
-	"github.com/mauriciomartinezc/real-estate-mc-common/repositories"
+	"github.com/mauriciomartinezc/real-estate-mc-common/routes"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/cities"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/countries"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/currencies"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/states"
-	"github.com/mauriciomartinezc/real-estate-mc-common/services"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -63,22 +61,9 @@ func run() error {
 	states.CreateStateSeeds(db)
 	cities.CreateCitySeeds(db)
 
-	// Repositories and Services
-	countryRepo := repositories.NewCountryRepository(db)
-	stateRepo := repositories.NewStateRepository(db)
-	cityRepo := repositories.NewCityRepository(db)
-
-	countryService := services.NewCountryService(countryRepo)
-	stateService := services.NewStateService(stateRepo)
-	cityService := services.NewCityService(cityRepo)
-
 	e := echo.New()
 	e.Use(middlewares.LanguageHandler())
-
-	api := e.Group("/api")
-	handlers.NewCityHandler(api, cityService)
-	handlers.NewCountryHandler(api, countryService)
-	handlers.NewStateHandler(api, stateService)
+	routes.SetupRoutes(e, db)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

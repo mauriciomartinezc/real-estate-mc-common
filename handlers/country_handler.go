@@ -11,9 +11,9 @@ type CountryHandler struct {
 	countryService services.CountryService
 }
 
-func NewCountryHandler(e *echo.Group, countryService services.CountryService) {
-	handler := &CountryHandler{countryService: countryService}
-	e.GET("/countries", handler.Countries)
+func NewCountryHandler(countryService services.CountryService) *CountryHandler {
+	return &CountryHandler{countryService: countryService}
+
 }
 
 // Countries godoc

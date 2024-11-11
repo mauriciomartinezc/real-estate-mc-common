@@ -11,9 +11,9 @@ type CityHandler struct {
 	cityService services.CityService
 }
 
-func NewCityHandler(e *echo.Group, cityService services.CityService) {
-	handler := &CityHandler{cityService: cityService}
-	e.GET("/cities/:stateUuid", handler.GetStateCities)
+func NewCityHandler(cityService services.CityService) *CityHandler {
+	return &CityHandler{cityService: cityService}
+
 }
 
 // GetStateCities godoc

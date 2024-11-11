@@ -11,9 +11,8 @@ type StateHandler struct {
 	stateService services.StateService
 }
 
-func NewStateHandler(e *echo.Group, stateService services.StateService) {
-	handler := &StateHandler{stateService: stateService}
-	e.GET("/states/:countryUuid", handler.GetCountryStates)
+func NewStateHandler(stateService services.StateService) *StateHandler {
+	return &StateHandler{stateService: stateService}
 }
 
 // GetCountryStates godoc
