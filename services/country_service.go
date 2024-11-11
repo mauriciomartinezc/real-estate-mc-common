@@ -1,8 +1,8 @@
-package service
+package services
 
 import (
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
-	"github.com/mauriciomartinezc/real-estate-mc-common/repository"
+	"github.com/mauriciomartinezc/real-estate-mc-common/repositories"
 )
 
 type CountryService interface {
@@ -10,10 +10,10 @@ type CountryService interface {
 }
 
 type countryService struct {
-	countryRepository repository.CountryRepository
+	countryRepository repositories.CountryRepository
 }
 
-func NewCountryService(countryRepository repository.CountryRepository) CountryService {
+func NewCountryService(countryRepository repositories.CountryRepository) CountryService {
 	return &countryService{
 		countryRepository: countryRepository,
 	}

@@ -5,14 +5,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mauriciomartinezc/real-estate-mc-common/config"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
-	"github.com/mauriciomartinezc/real-estate-mc-common/handler"
-	"github.com/mauriciomartinezc/real-estate-mc-common/middleware"
-	"github.com/mauriciomartinezc/real-estate-mc-common/repository"
+	"github.com/mauriciomartinezc/real-estate-mc-common/handlers"
+	"github.com/mauriciomartinezc/real-estate-mc-common/middlewares"
+	"github.com/mauriciomartinezc/real-estate-mc-common/repositories"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/cities"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/countries"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/currencies"
 	"github.com/mauriciomartinezc/real-estate-mc-common/seeds/states"
-	"github.com/mauriciomartinezc/real-estate-mc-common/service"
+	"github.com/mauriciomartinezc/real-estate-mc-common/services"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -64,21 +64,21 @@ func run() error {
 	cities.CreateCitySeeds(db)
 
 	// Repositories and Services
-	countryRepo := repository.NewCountryRepository(db)
-	stateRepo := repository.NewStateRepository(db)
-	cityRepo := repository.NewCityRepository(db)
+	countryRepo := repositories.NewCountryRepository(db)
+	stateRepo := repositories.NewStateRepository(db)
+	cityRepo := repositories.NewCityRepository(db)
 
-	countryService := service.NewCountryService(countryRepo)
-	stateService := service.NewStateService(stateRepo)
-	cityService := service.NewCityService(cityRepo)
+	countryService := services.NewCountryService(countryRepo)
+	stateService := services.NewStateService(stateRepo)
+	cityService := services.NewCityService(cityRepo)
 
 	e := echo.New()
-	e.Use(middleware.LanguageHandler())
+	e.Use(middlewares.LanguageHandler())
 
 	api := e.Group("/api")
-	handler.NewCityHandler(api, cityService)
-	handler.NewCountryHandler(api, countryService)
-	handler.NewStateHandler(api, stateService)
+	handlers.NewCityHandler(api, cityService)
+	handlers.NewCountryHandler(api, countryService)
+	handlers.NewStateHandler(api, stateService)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

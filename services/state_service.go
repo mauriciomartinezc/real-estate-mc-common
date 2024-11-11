@@ -1,10 +1,10 @@
-package service
+package services
 
 import (
 	"errors"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
 	"github.com/mauriciomartinezc/real-estate-mc-common/i18n/locales"
-	"github.com/mauriciomartinezc/real-estate-mc-common/repository"
+	"github.com/mauriciomartinezc/real-estate-mc-common/repositories"
 	"github.com/mauriciomartinezc/real-estate-mc-common/utils"
 )
 
@@ -13,10 +13,10 @@ type StateService interface {
 }
 
 type stateService struct {
-	stateRepository repository.StateRepository
+	stateRepository repositories.StateRepository
 }
 
-func NewStateService(stateRepository repository.StateRepository) StateService {
+func NewStateService(stateRepository repositories.StateRepository) StateService {
 	return &stateService{stateRepository: stateRepository}
 }
 

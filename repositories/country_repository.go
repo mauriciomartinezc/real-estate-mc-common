@@ -1,4 +1,4 @@
-package repository
+package repositories
 
 import (
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"

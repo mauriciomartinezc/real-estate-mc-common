@@ -1,17 +1,17 @@
-package handler
+package handlers
 
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/mauriciomartinezc/real-estate-mc-common/i18n/locales"
-	"github.com/mauriciomartinezc/real-estate-mc-common/service"
+	"github.com/mauriciomartinezc/real-estate-mc-common/services"
 	"github.com/mauriciomartinezc/real-estate-mc-common/utils"
 )
 
 type CityHandler struct {
-	cityService service.CityService
+	cityService services.CityService
 }
 
-func NewCityHandler(e *echo.Group, cityService service.CityService) {
+func NewCityHandler(e *echo.Group, cityService services.CityService) {
 	handler := &CityHandler{cityService: cityService}
 	e.GET("/cities/:stateUuid", handler.GetStateCities)
 }

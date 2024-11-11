@@ -1,10 +1,10 @@
-package service
+package services
 
 import (
 	"errors"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
 	"github.com/mauriciomartinezc/real-estate-mc-common/i18n/locales"
-	"github.com/mauriciomartinezc/real-estate-mc-common/repository"
+	"github.com/mauriciomartinezc/real-estate-mc-common/repositories"
 	"github.com/mauriciomartinezc/real-estate-mc-common/utils"
 )
 
@@ -13,10 +13,10 @@ type CityService interface {
 }
 
 type cityService struct {
-	cityRepository repository.CityRepository
+	cityRepository repositories.CityRepository
 }
 
-func NewCityService(cityRepository repository.CityRepository) CityService {
+func NewCityService(cityRepository repositories.CityRepository) CityService {
 	return &cityService{cityRepository: cityRepository}
 }
 

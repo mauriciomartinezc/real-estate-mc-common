@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"errors"
@@ -51,7 +51,7 @@ func TestGetStateCities(t *testing.T) {
 	t.Run("Repository Error", func(t *testing.T) {
 		stateUuid := uuid.New().String()
 		expectedCities := &domain.Cities{}
-		expectedError := errors.New("repository error")
+		expectedError := errors.New("repositories error")
 
 		mockRepo.On("GetStateCities", stateUuid).Return(expectedCities, expectedError)
 
