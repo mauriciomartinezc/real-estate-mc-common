@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/mauriciomartinezc/real-estate-mc-common/cache"
 	"os"
 	"path/filepath"
 )
@@ -32,4 +33,22 @@ func GetDSN() (string, error) {
 	)
 
 	return dsn, nil
+}
+
+func NewCacheClient() cache.Cache {
+	var cacheClient cache.Cache
+
+	if os.Getenv("CACHE_TYPE") == "redis" {
+		cacheClient = cache.NewRedisCache(
+			os.Getenv("CACHE_HOST")+":"+os.Getenv("CACHE_PORT"),
+			os.Getenv("CACHE_PASSWORD"),
+			0,
+		)
+	}
+
+	if cacheClient == nil || os.Getenv("CACHE_TYPE") == "memory" {
+		cacheClient = cache.NewInMemoryCache()
+	}
+
+	return cacheClient
 }

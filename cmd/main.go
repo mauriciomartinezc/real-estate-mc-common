@@ -61,9 +61,11 @@ func run() error {
 	states.CreateStateSeeds(db)
 	cities.CreateCitySeeds(db)
 
+	cacheClient := config.NewCacheClient()
+
 	e := echo.New()
 	e.Use(middlewares.LanguageHandler())
-	routes.SetupRoutes(e, db)
+	routes.SetupRoutes(e, db, cacheClient)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
