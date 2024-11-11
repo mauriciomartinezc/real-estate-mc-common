@@ -46,5 +46,8 @@
   },
   "required": {
     "other": "es requerido"
+  },
+  "MissingCompanyHeader": {
+    "other": "Falta el encabezado X-Company-Id"
   }
 }

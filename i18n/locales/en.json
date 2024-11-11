@@ -46,5 +46,8 @@
   },
   "required": {
     "other": "is required"
+  },
+  "MissingCompanyHeader": {
+    "other": "Missing X-Company-Id Header"
   }
 }
