@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/mauriciomartinezc/real-estate-mc-common/cache"
+	"github.com/mauriciomartinezc/real-estate-mc-common/storage"
 	"os"
 	"path/filepath"
 )
@@ -51,4 +52,10 @@ func NewCacheClient() cache.Cache {
 	}
 
 	return cacheClient
+}
+
+func NewStorage() (storage.StorageProvider, error) {
+	storageName := os.Getenv("STORAGE")
+	provider, err := storage.NewStorageProvider(storageName)
+	return provider, err
 }
