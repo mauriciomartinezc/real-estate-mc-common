@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/mauriciomartinezc/real-estate-mc-common/config"
-	"github.com/mauriciomartinezc/real-estate-mc-common/discovery/consul"
 	"github.com/mauriciomartinezc/real-estate-mc-common/domain"
 	"github.com/mauriciomartinezc/real-estate-mc-common/middlewares"
 	"github.com/mauriciomartinezc/real-estate-mc-common/routes"
@@ -64,10 +63,6 @@ func run() error {
 	cities.CreateCitySeeds(db)
 
 	cacheClient := config.NewCacheClient()
-
-	// Consul
-	discoveryClient := consul.NewConsultApi()
-	discoveryClient.RegisterService("mc-common")
 
 	e := echo.New()
 	utils.RouteHealth(e)
