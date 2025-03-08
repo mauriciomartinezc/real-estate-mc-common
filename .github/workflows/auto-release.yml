@@ -17,6 +17,9 @@ jobs:
 
       - name: Get Latest Tag and Bump Patch Version
         id: tag_bump
+        env:
+          # Usamos TOKEN_ACTION para forzar el push con el token personal
+          MY_GITHUB_TOKEN: ${{ secrets.TOKEN_ACTION }}
         run: |
           # Obtener el último tag; si no existe, usar "v0.0.0"
           latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
@@ -27,12 +30,10 @@ jobs:
           new_tag="v${major}.${minor}.${patch}"
           echo "Nuevo tag: $new_tag"
           
-          # Actualizar la URL remota para usar el token personal (MY_GITHUB_TOKEN)
-          # La URL se formará con el formato HTTPS: https://<token>@github.com/owner/repo.git
+          # Actualizar la URL remota para usar el token personal.
           REMOTE_URL=$(git config --get remote.origin.url)
-          # Extraer owner y repo usando sed o similar; asumiendo formato https://github.com/owner/repo.git
           owner_repo=$(echo $REMOTE_URL | sed -E 's|https://github.com/(.+)\.git|\1|')
-          new_remote="https://$MY_GITHUB_TOKEN@github.com/$owner_repo.git"
+          new_remote="https://${MY_GITHUB_TOKEN}@github.com/$owner_repo.git"
           git remote set-url origin "$new_remote"
           
           # Crear el nuevo tag localmente y empujarlo al remoto
@@ -41,6 +42,9 @@ jobs:
           
           # Guardar el nuevo tag para pasos posteriores
           echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_ACTION }}
         with:
