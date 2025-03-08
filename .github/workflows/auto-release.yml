@@ -32,8 +32,10 @@ jobs:
           
           # Actualizar la URL remota para usar el token personal.
           REMOTE_URL=$(git config --get remote.origin.url)
-          owner_repo=$(echo $REMOTE_URL | sed -E 's|https://github.com/(.+)\.git|\1|')
-          new_remote="https://${MY_GITHUB_TOKEN}@github.com/$owner_repo.git"
+          # Eliminar el prefijo "https://github.com/" y quitar la extensión ".git" o ".git/"
+          owner_repo=$(echo $REMOTE_URL | sed -E 's|https://github.com/||; s|\.git/?$||')
+          new_remote="https://${MY_GITHUB_TOKEN}@github.com/${owner_repo}.git"
+          echo "Nueva URL remota: $new_remote"
           git remote set-url origin "$new_remote"
           
           # Crear el nuevo tag localmente y empujarlo al remoto
