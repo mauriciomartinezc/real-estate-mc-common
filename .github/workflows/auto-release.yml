@@ -1,0 +1,42 @@
+name: Auto Release on Main Changes
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  auto-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Necesario para acceder a los tags
+
+      - name: Get Latest Tag and Bump Patch Version
+        id: get_tag
+        run: |
+          # Obtener el último tag; si no existe, usar v0.0.0
+          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
+          echo "Último tag: $latest_tag"
+          # Remover la "v" inicial
+          version=${latest_tag#v}
+          IFS='.' read -r major minor patch <<< "$version"
+          patch=$((patch + 1))
+          new_tag="v${major}.${minor}.${patch}"
+          echo "Nuevo tag: $new_tag"
+          echo "::set-output name=new_tag::$new_tag"
+          
+          # Crear el nuevo tag localmente y empujarlo al remoto
+          git tag $new_tag
+          git push origin $new_tag
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: "93b6bdd1c529898e447e75f2c17e12c742036cad"
+        with:
+          tag_name: ${{ steps.get_tag.outputs.new_tag }}
+          release_name: "Release ${{ steps.get_tag.outputs.new_tag }}"
+          body: "Release automatizado generado a partir de los cambios en la rama main."
