@@ -66,11 +66,27 @@ func (m *MinioProvider) CreateBucket(bucketName string) error {
 	if exists {
 		return nil
 	}
+
 	if err := m.Client.MakeBucket(ctx, bucketName, minio.MakeBucketOptions{
 		Region: os.Getenv("MINIO_REGION"),
 	}); err != nil {
 		return fmt.Errorf("error creando el bucket %s: %v", bucketName, err)
 	}
+
+	policy := fmt.Sprintf(`{
+        "Version":"2012-10-17",
+        "Statement":[{
+            "Effect":"Allow",
+            "Principal":"*",
+            "Action":["s3:GetObject"],
+            "Resource":["arn:aws:s3:::%s/*"]
+        }]
+    }`, bucketName)
+
+	if err := m.Client.SetBucketPolicy(ctx, bucketName, policy); err != nil {
+		return fmt.Errorf("error aplicando política pública al bucket %s: %v", bucketName, err)
+	}
+
 	return nil
 }
 

@@ -73,6 +73,23 @@ func (p *AWSProvider) CreateBucket(bucketName string) error {
 	if err != nil {
 		return fmt.Errorf("error creando el bucket %s: %v", bucketName, err)
 	}
+
+	policy := fmt.Sprintf(`{
+      "Version":"2012-10-17",
+      "Statement":[{
+          "Effect":"Allow",
+          "Principal":"*",
+          "Action":["s3:GetObject"],
+          "Resource":["arn:aws:s3:::%s/*"]
+      }]
+    }`, bucketName)
+	if _, err := p.Client.PutBucketPolicy(ctx, &s3.PutBucketPolicyInput{
+		Bucket: &bucketName,
+		Policy: &policy,
+	}); err != nil {
+		return fmt.Errorf("error aplicando bucket policy pública: %v", err)
+	}
+
 	return nil
 }
 
@@ -91,6 +108,7 @@ func (p *AWSProvider) Upload(bucketName, objectName, filePath, contentType strin
 		Key:         &objectName,
 		Body:        file,
 		ContentType: &contentType,
+		ACL:         types.ObjectCannedACLPublicRead,
 	})
 	if err != nil {
 		return fmt.Errorf("error subiendo el objeto %s: %v", objectName, err)
