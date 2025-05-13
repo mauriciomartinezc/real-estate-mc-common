@@ -123,3 +123,40 @@ func (p *AWSProvider) DeleteObject(bucketName, objectName string) error {
 	}
 	return nil
 }
+
+func (p *AWSProvider) MoveObject(bucketName, srcKey, dstKey string) error {
+	ctx := context.Background()
+
+	// Construye la fuente en el formato esperado por S3
+	copySource := fmt.Sprintf("%s/%s", bucketName, srcKey)
+
+	// 1) Copiar
+	_, err := p.Client.CopyObject(ctx, &s3.CopyObjectInput{
+		Bucket:     &bucketName,
+		CopySource: &copySource,
+		Key:        &dstKey,
+		// (opcional) MetadataDirective: types.MetadataDirectiveCopy,
+	})
+	if err != nil {
+		return fmt.Errorf("error copiando desde %s a %s: %v", srcKey, dstKey, err)
+	}
+
+	// 2) Esperar a que el objeto exista (opcional)
+	_, err = p.Client.HeadObject(ctx, &s3.HeadObjectInput{
+		Bucket: &bucketName,
+		Key:    &dstKey,
+	})
+	if err != nil {
+		return fmt.Errorf("error verificando copia a %s: %v", dstKey, err)
+	}
+
+	// 3) Borrar el original
+	if _, err := p.Client.DeleteObject(ctx, &s3.DeleteObjectInput{
+		Bucket: &bucketName,
+		Key:    &srcKey,
+	}); err != nil {
+		return fmt.Errorf("error borrando objeto original %s: %v", srcKey, err)
+	}
+
+	return nil
+}

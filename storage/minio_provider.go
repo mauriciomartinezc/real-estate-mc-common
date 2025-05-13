@@ -104,3 +104,27 @@ func (m *MinioProvider) DeleteObject(bucketName, objectName string) error {
 	}
 	return nil
 }
+
+func (m *MinioProvider) MoveObject(bucket, srcObject, dstObject string) error {
+	ctx := context.Background()
+
+	// 1) Copiar
+	src := minio.CopySrcOptions{
+		Bucket: bucket,
+		Object: srcObject,
+	}
+	dst := minio.CopyDestOptions{
+		Bucket: bucket,
+		Object: dstObject,
+	}
+	if _, err := m.Client.CopyObject(ctx, dst, src); err != nil {
+		return fmt.Errorf("error copiando objeto de %s a %s: %v", srcObject, dstObject, err)
+	}
+
+	// 2) Borrar el original
+	if err := m.Client.RemoveObject(ctx, bucket, srcObject, minio.RemoveObjectOptions{}); err != nil {
+		return fmt.Errorf("error borrando objeto original %s: %v", srcObject, err)
+	}
+
+	return nil
+}

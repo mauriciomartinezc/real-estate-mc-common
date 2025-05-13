@@ -13,4 +13,6 @@ type StorageProvider interface {
 	Download(bucketName, objectName string) (io.ReadCloser, error)
 	// DeleteObject elimina un objeto del bucket.
 	DeleteObject(bucketName, objectName string) error
+	// MoveObject mueve/renombra un objeto dentro del bucket.
+	MoveObject(bucketName, srcObjectName, dstObjectName string) error
 }
