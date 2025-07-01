@@ -9,29 +9,37 @@ import (
 )
 
 // FormatValidationErrors returns a map where each field has an array of error messages
-func FormatValidationErrors(localice *i18n.Localizer, validationErrors validator.ValidationErrors) map[string][]string {
+func FormatValidationErrors(localizer *i18n.Localizer, ves validator.ValidationErrors) map[string][]string {
 	out := make(map[string][]string)
 
-	for _, fe := range validationErrors {
-		ns := fe.StructNamespace()
+	for _, fe := range ves {
+		ns := fe.StructNamespace() // e.g. "Company.NameTrade"
+		tag := fe.Tag()            // e.g. "required" or "max"
+		param := fe.Param()        // p. ej. "50" para max=50
 
-		// intentamos traducir el msg completo a través de i18n
-		localized, err := localice.Localize(&i18n.LocalizeConfig{
+		// 1) traduce el nombre del campo
+		fieldName, err := localizer.Localize(&i18n.LocalizeConfig{
 			MessageID: ns,
 		})
-		var msg string
 		if err != nil {
-			// fallback genérico
-			msg = fmt.Sprintf("%s %s %s",
-				localice.MustLocalize(&i18n.LocalizeConfig{MessageID: "InvalidValueFor"}),
-				fe.Field(),
-				fe.Tag(),
-			)
-		} else {
-			msg = localized
+			fieldName = fe.Field() // fallback GO field
 		}
 
-		key := formatKey(ns)
+		// 2) traduce la regla
+		validationMsg, err := localizer.Localize(&i18n.LocalizeConfig{
+			MessageID:    tag,
+			TemplateData: map[string]interface{}{"Param": param},
+		})
+		if err != nil {
+			validationMsg = tag
+		}
+
+		// 3) junta: "Nombre comercial es obligatorio"
+		msg := fmt.Sprintf("%s %s", fieldName, validationMsg)
+
+		// 4) convierte la key para la salida JSON, p. ej. "data_billing.address"
+		key := parseFieldName(ns)
+
 		out[key] = append(out[key], msg)
 	}
 
@@ -54,11 +62,11 @@ func toSnake(s string) string {
 	return sb.String()
 }
 
-// formatKey toma StructNamespace, p.ej. "Company.DataBilling.City.Name",
+// parseFieldName toma StructNamespace, p.ej. "Company.DataBilling.City.Name",
 // descarta "Company", lo divide y convierte cada parte a snake,
 // y finalmente las junta con puntos:
 // => "data_billing.city.name"
-func formatKey(ns string) string {
+func parseFieldName(ns string) string {
 	parts := strings.Split(ns, ".")
 	if len(parts) <= 1 {
 		return toSnake(ns)

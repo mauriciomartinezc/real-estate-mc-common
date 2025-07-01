@@ -14,5 +14,7 @@ func NewLocalization() *i18n.Bundle {
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	bundle.MustLoadMessageFile(filepath.Join(cwd, "/i18n/locales/en.json"))
 	bundle.MustLoadMessageFile(filepath.Join(cwd, "/i18n/locales/es.json"))
+	bundle.MustLoadMessageFile(filepath.Join(cwd, "/i18n/locales/validation_en.json"))
+	bundle.MustLoadMessageFile(filepath.Join(cwd, "/i18n/locales/validation_es.json"))
 	return bundle
 }
